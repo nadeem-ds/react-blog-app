@@ -1,9 +1,10 @@
 import React from "react";
 import Container from "../container/Container";
+import Page from "../Page/Page";
 
 const Body = () => {
   return (
-    <Container wide={true}>
+    <Page title="Welcome-Page">
       <div className="row align-items-center">
         <div className="col-lg-7 py-3 py-md-5">
           <h1 className="display-3">Remember Writing???</h1>
@@ -63,7 +64,7 @@ const Body = () => {
           </form>
         </div>
       </div>
-    </Container>
+    </Page>
   );
 };
 

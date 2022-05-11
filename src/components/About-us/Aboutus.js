@@ -1,10 +1,11 @@
-import React from "react";
-import Container from "../container/Container";
+import React, { useEffect } from "react";
+import Page from "../Page/Page";
 
 const Aboutus = () => {
+ 
   return (
-    <Container>
-      <h2>About Us</h2>
+    <Page title="About-us">
+      <h2>About Us!!!</h2>
       <p className="lead text-muted">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis
         dolorum labore quisquam vel id dicta fuga! Ducimus, quo. Dolore commodi
@@ -25,7 +26,7 @@ const Aboutus = () => {
         nobis provident quo dolorum sapiente temporibus facere non repellendus
         consequatur cupiditate!
       </p>
-    </Container>
+    </Page>
   );
 };
 
