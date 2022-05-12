@@ -14,6 +14,9 @@ const HeaderFormLoggedOut = (props) => {
       });
       if (response.data) {
         console.log(response.data);
+        localStorage.setItem("ComplexAppToken", response.data.token);
+        localStorage.setItem("ComplexAppUserName", response.data.username);
+        localStorage.setItem("ComplexAppAvatar", response.data.avatar);
         props.setIsLogIn(true);
       } else {
         console.log("Incorrect username / password.");

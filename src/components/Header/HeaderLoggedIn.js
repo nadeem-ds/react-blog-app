@@ -3,6 +3,9 @@ import React from "react";
 const HeaderLoggedIn = (props) => {
   const loggedOut = () => {
     props.setIsLogIn(false);
+    localStorage.removeItem("ComplexAppToken");
+    localStorage.removeItem("ComplexAppUserName");
+    localStorage.removeItem("ComplexAppAvatar");
   };
   return (
     <div className="flex-row my-3 my-md-0">
@@ -16,7 +19,7 @@ const HeaderLoggedIn = (props) => {
       <a href="#" className="mr-2">
         <img
           className="small-header-avatar"
-          src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"
+          src={localStorage.getItem("ComplexAppAvatar")}
           alt="my pic"
         />
       </a>
