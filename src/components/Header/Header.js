@@ -3,10 +3,7 @@ import { Link } from "react-router-dom";
 import HeaderFormLoggedOut from "./HeaderFormLoggedOut";
 import HeaderLoggedIn from "./HeaderLoggedIn";
 
-const Header = () => {
-  const [isLogIn, setIsLogIn] = useState(
-    Boolean(localStorage.getItem("ComplexAppToken"))
-  );
+const Header = ({ isLogIn, setIsLogIn }) => {
   return (
     <div>
       {/* <h2>Header</h2> */}

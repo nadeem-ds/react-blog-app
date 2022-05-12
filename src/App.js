@@ -5,13 +5,18 @@ import Header from "./components/Header/Header";
 import { Route,Routes } from "react-router-dom";
 import Aboutus from "./components/About-us/Aboutus";
 import Terms from "./components/Terms/Terms";
+import UserHome from "./components/Body/UserHome";
+import { useState } from "react";
 
 function App() {
+  const [isLogIn, setIsLogIn] = useState(
+    Boolean(localStorage.getItem("ComplexAppToken"))
+  );
   return (
     <div classNameName="App">
-      <Header/>
+      <Header isLogIn={isLogIn} setIsLogIn={setIsLogIn}/>
       <Routes>
-        <Route path="/" element={<Body/>}/>
+        <Route path="/" element={isLogIn?<UserHome/>:<Body/>} />
         <Route path="/about-us" element={<Aboutus/>}/>
         <Route path="/terms" element={<Terms/>}/>
       </Routes>
