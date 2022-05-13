@@ -10,19 +10,30 @@ import { useState } from "react";
 import CreatePost from "./components/CreatePost/CreatePost";
 import Axios from "axios";
 import ViewSinglePost from "./components/ShowPost/ViewSinglePost";
+import FlashMessage from "./components/FlashMessage/FlashMessage";
 Axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
   const [isLogIn, setIsLogIn] = useState(
     Boolean(localStorage.getItem("ComplexAppToken"))
   );
+
+  const [flashMessages, setFlashMessages] = useState([]);
+
+  const addFlashMessage = (msg) => {
+    setFlashMessages((prev) => prev.concat(msg));
+  };
   return (
     <div className="App">
+      <FlashMessage message={flashMessages} />
       <Header isLogIn={isLogIn} setIsLogIn={setIsLogIn} />
       <Routes>
         <Route path="/" element={isLogIn ? <UserHome /> : <Body />} />
-        <Route path="/post/:id" element={<ViewSinglePost/>}/>
-        <Route path="/create-post" element={<CreatePost />} />
+        <Route path="/post/:id" element={<ViewSinglePost />} />
+        <Route
+          path="/create-post"
+          element={<CreatePost addFlashMessage={addFlashMessage} />}
+        />
         <Route path="/about-us" element={<Aboutus />} />
         <Route path="/terms" element={<Terms />} />
       </Routes>
