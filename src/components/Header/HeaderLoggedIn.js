@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import ExampleContext from "../Context/ExampleContext";
 
-const HeaderLoggedIn = (props) => {
+const HeaderLoggedIn = () => {
+  const { setIsLogIn } = useContext(ExampleContext);
   const loggedOut = () => {
-    props.setIsLogIn(false);
+    setIsLogIn(false);
     localStorage.removeItem("ComplexAppToken");
     localStorage.removeItem("ComplexAppUserName");
     localStorage.removeItem("ComplexAppAvatar");
