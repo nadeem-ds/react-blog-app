@@ -9,7 +9,7 @@ const Body = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let URL= "http://localhost:8080/register"
+    let URL= "/register"
     try {
       await Axios.post(URL, {
         username: username,
