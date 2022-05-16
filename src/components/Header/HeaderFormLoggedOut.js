@@ -1,11 +1,13 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import Axios from "axios";
 import ExampleContext from "../Context/ExampleContext";
+import DispatchContext from "../Context/DispatchContext";
+
 
 const HeaderFormLoggedOut = () => {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
-  const {setIsLogIn} = useContext(ExampleContext);
+  const appDispacth  = useContext(DispatchContext);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -19,7 +21,7 @@ const HeaderFormLoggedOut = () => {
         localStorage.setItem("ComplexAppToken", response.data.token);
         localStorage.setItem("ComplexAppUserName", response.data.username);
         localStorage.setItem("ComplexAppAvatar", response.data.avatar);
-        setIsLogIn(true);
+        appDispacth({type:"Login"})
       } else {
         console.log("Incorrect username / password.");
       }

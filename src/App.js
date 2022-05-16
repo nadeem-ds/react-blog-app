@@ -1,4 +1,6 @@
 import "./App.css";
+import StateContext from "./components/Context/StateContext";
+import DispatchContext from "./components/Context/DispatchContext";
 import Body from "./components/Body/Body";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
@@ -6,39 +8,56 @@ import { Route, Routes } from "react-router-dom";
 import Aboutus from "./components/About-us/Aboutus";
 import Terms from "./components/Terms/Terms";
 import UserHome from "./components/Body/UserHome";
-import { useState } from "react";
+import { useState, useReducer } from "react";
 import CreatePost from "./components/CreatePost/CreatePost";
 import Axios from "axios";
 import ViewSinglePost from "./components/ShowPost/ViewSinglePost";
 import FlashMessage from "./components/FlashMessage/FlashMessage";
-import ExampleContext from "./components/Context/ExampleContext";
+import { Action } from "history";
 Axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
-  const [isLogIn, setIsLogIn] = useState(
-    Boolean(localStorage.getItem("ComplexAppToken"))
-  );
-
-  const [flashMessages, setFlashMessages] = useState([]);
-
-  const addFlashMessage = (msg) => {
-    setFlashMessages((prev) => prev.concat(msg));
+  const initialState = {
+    loggedIn: Boolean(localStorage.getItem("ComplexAppToken")),
+    flashMessages: [],
   };
+
+  function ourReducer(state, action) {
+    switch (action.type) {
+      case "login":
+        return { loggedIn: true, flashMessages: state.flashMessages };
+      case "logout":
+        return { loggedIn: false, flashMessages: state.flashMessages };
+      case "flashMessage":
+        return {
+          loggedIn: state.loggedIn,
+          flashMessages: state.flashMessages.concat(action.value),
+        };
+    }
+  }
+
+  const [state, dispatch] = useReducer(ourReducer, initialState);
+
   return (
-    <ExampleContext.Provider value={{addFlashMessage,setIsLogIn}}>
-      <div className="App">
-        <FlashMessage message={flashMessages} />
-        <Header isLogIn={isLogIn}  />
-        <Routes>
-          <Route path="/" element={isLogIn ? <UserHome /> : <Body />} />
-          <Route path="/post/:id" element={<ViewSinglePost />} />
-          <Route path="/create-post" element={<CreatePost />} />
-          <Route path="/about-us" element={<Aboutus />} />
-          <Route path="/terms" element={<Terms />} />
-        </Routes>
-        <Footer />
-      </div>
-    </ExampleContext.Provider>
+    <StateContext.Provider value={state}>
+      <DispatchContext.Provider value={dispatch}>
+        <div className="App">
+          <FlashMessage message={state.flashMessages} />
+          <Header />
+          <Routes>
+            <Route
+              path="/"
+              element={state.loggedIn ? <UserHome /> : <Body />}
+            />
+            <Route path="/post/:id" element={<ViewSinglePost />} />
+            <Route path="/create-post" element={<CreatePost />} />
+            <Route path="/about-us" element={<Aboutus />} />
+            <Route path="/terms" element={<Terms />} />
+          </Routes>
+          <Footer />
+        </div>
+      </DispatchContext.Provider>
+    </StateContext.Provider>
   );
 }
 
