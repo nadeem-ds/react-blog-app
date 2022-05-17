@@ -15,6 +15,7 @@ import ViewSinglePost from "./components/ShowPost/ViewSinglePost";
 import FlashMessage from "./components/FlashMessage/FlashMessage";
 import { useImmerReducer } from "use-immer";
 import { Action } from "history";
+import UserProfile from "./components/Profie/UserProfile";
 Axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
           <FlashMessage message={state.flashMessages} />
           <Header />
           <Routes>
+            <Route path="/profile/:username/*" element={<UserProfile />} />
             <Route
               path="/"
               element={state.loggedIn ? <UserHome /> : <Body />}
