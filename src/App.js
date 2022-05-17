@@ -13,6 +13,7 @@ import CreatePost from "./components/CreatePost/CreatePost";
 import Axios from "axios";
 import ViewSinglePost from "./components/ShowPost/ViewSinglePost";
 import FlashMessage from "./components/FlashMessage/FlashMessage";
+import { useImmerReducer } from "use-immer";
 import { Action } from "history";
 Axios.defaults.baseURL = "http://localhost:8080";
 
@@ -22,21 +23,21 @@ function App() {
     flashMessages: [],
   };
 
-  function ourReducer(state, action) {
+  function ourReducer(draft, action) {
     switch (action.type) {
       case "login":
-        return { loggedIn: true, flashMessages: state.flashMessages };
+        draft.loggedIn = true;
+        return
       case "logout":
-        return { loggedIn: false, flashMessages: state.flashMessages };
+        draft.loggedIn = false;
+        return
       case "flashMessage":
-        return {
-          loggedIn: state.loggedIn,
-          flashMessages: state.flashMessages.concat(action.value),
-        };
+        draft.flashMessages.push(action.value);
+        return
     }
   }
 
-  const [state, dispatch] = useReducer(ourReducer, initialState);
+  const [state, dispatch] = useImmerReducer(ourReducer, initialState);
 
   return (
     <StateContext.Provider value={state}>
