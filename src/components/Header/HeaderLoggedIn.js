@@ -1,16 +1,16 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import DispatchContext from "../Context/DispatchContext";
+import StateContext from "../Context/StateContext";
 import ExampleContext from "../Context/ExampleContext";
 
 
 const HeaderLoggedIn = () => {
   const appDispatch   = useContext(DispatchContext);
+  const appState = useContext(StateContext)
   const loggedOut = () => {
     appDispatch({type:"Logout"})
-    localStorage.removeItem("ComplexAppToken");
-    localStorage.removeItem("ComplexAppUserName");
-    localStorage.removeItem("ComplexAppAvatar");
+  
   };
   return (
     <div className="flex-row my-3 my-md-0">
@@ -24,7 +24,7 @@ const HeaderLoggedIn = () => {
       <a href="#" className="mr-2">
         <img
           className="small-header-avatar"
-          src={localStorage.getItem("ComplexAppAvatar")}
+          src={appState.user.avatar}
           alt="my pic"
         />
       </a>

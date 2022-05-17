@@ -8,7 +8,7 @@ import { Route, Routes } from "react-router-dom";
 import Aboutus from "./components/About-us/Aboutus";
 import Terms from "./components/Terms/Terms";
 import UserHome from "./components/Body/UserHome";
-import { useState, useReducer } from "react";
+import { useState, useReducer, useDeferredValue, useEffect } from "react";
 import CreatePost from "./components/CreatePost/CreatePost";
 import Axios from "axios";
 import ViewSinglePost from "./components/ShowPost/ViewSinglePost";
@@ -21,23 +21,39 @@ function App() {
   const initialState = {
     loggedIn: Boolean(localStorage.getItem("ComplexAppToken")),
     flashMessages: [],
+    user: {
+      token: localStorage.getItem("ComplexAppToken"),
+      username: localStorage.getItem("ComplexAppUserName"),
+      avatar: localStorage.getItem("ComplexAppAvatar"),
+    },
   };
 
   function ourReducer(draft, action) {
     switch (action.type) {
       case "login":
         draft.loggedIn = true;
-        return
+        return;
       case "logout":
         draft.loggedIn = false;
-        return
+        return;
       case "flashMessage":
         draft.flashMessages.push(action.value);
-        return
+        return;
     }
   }
 
   const [state, dispatch] = useImmerReducer(ourReducer, initialState);
+  useEffect(() => {
+    if (state.loggedIn) {
+      localStorage.setItem("ComplexAppToken", state.user.token);
+      localStorage.setItem("ComplexAppUserName", state.user.username);
+      localStorage.setItem("ComplexAppAvatar", state.user.avatar);
+    } else {
+      localStorage.removeItem("ComplexAppToken");
+      localStorage.removeItem("ComplexAppUserName");
+      localStorage.removeItem("ComplexAppAvatar");
+    }
+  }, [state.loggedIn]);
 
   return (
     <StateContext.Provider value={state}>
