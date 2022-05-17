@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import StateContext from "../Context/StateContext";
 import Page from "../Page/Page";
+import ProfilePost from "./ProfilePost";
 
 const UserProfile = () => {
   const { username } = useParams();
@@ -24,7 +25,7 @@ const UserProfile = () => {
         const responce = await Axios.post(`/profile/${username}`, {
           token: appState.user.token,
         });
-        console.table(responce.data);
+        setProfileData(responce.data);
       } catch (error) {
         console.log("There is an error in profile page");
       }
@@ -55,32 +56,9 @@ const UserProfile = () => {
           Following: {profileData.counts.folllowingCount}
         </a>
       </div>
-      <div className="list-group">
-        <a href="#" className="list-group-item list-group-item-action">
-          <img
-            className="avatar-tiny"
-            src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"
-          />
-          <strong>Example Post #1</strong>
-          <span className="text-muted small">on 2/10/2020 </span>
-        </a>
-        <a href="#" className="list-group-item list-group-item-action">
-          <img
-            className="avatar-tiny"
-            src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"
-          />
-          <strong>Example Post #2</strong>
-          <span className="text-muted small">on 2/10/2020 </span>
-        </a>
-        <a href="#" className="list-group-item list-group-item-action">
-          <img
-            className="avatar-tiny"
-            src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"
-          />
-          <strong>Example Post #3</strong>
-          <span className="text-muted small">on 2/10/2020 </span>
-        </a>
-      </div>
+
+     <ProfilePost/>
+
     </Page>
   );
 };
