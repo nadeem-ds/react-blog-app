@@ -10,7 +10,7 @@ const ProfilePost = () => {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const responce = await Axios.get(`profile/${username}/posts`);
+        const responce = await Axios.get(`/profile/${username}/posts`);
         setPosts(responce.data);
         setIsLoading(false);
       } catch (error) {
@@ -32,7 +32,7 @@ const ProfilePost = () => {
         return (
           <Link
             key={post._id}
-            to={`post/${post._id}`}
+            to={`/post/${post._id}`}
             className="list-group-item list-group-item-action"
           >
             <img

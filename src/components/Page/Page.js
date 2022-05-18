@@ -5,7 +5,7 @@ const Page = (props) => {
   useEffect(() => {
     document.title = `${props.title} | Complex-app`;
     window.scrollTo(0, 0);
-  }, []);
+  }, [props.title]);
   return <Container wide={true}>{props.children}</Container>;
 };
 
