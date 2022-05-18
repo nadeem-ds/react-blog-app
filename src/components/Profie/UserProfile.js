@@ -20,10 +20,12 @@ const UserProfile = () => {
   });
 
   useEffect(() => {
+    const ourRequest = Axios.CancelToken.source();
     async function fetchDetatil() {
       try {
         const responce = await Axios.post(`/profile/${username}`, {
           token: appState.user.token,
+          cancelToken: ourRequest.token,
         });
         setProfileData(responce.data);
       } catch (error) {
@@ -31,6 +33,9 @@ const UserProfile = () => {
       }
     }
     fetchDetatil();
+    return () => {
+      ourRequest.cancel();
+    };
   }, []);
   return (
     <Page title="profile-screen">
@@ -57,8 +62,7 @@ const UserProfile = () => {
         </a>
       </div>
 
-     <ProfilePost/>
-
+      <ProfilePost />
     </Page>
   );
 };
