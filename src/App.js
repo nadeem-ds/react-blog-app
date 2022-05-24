@@ -8,7 +8,7 @@ import { Route, Routes } from "react-router-dom";
 import Aboutus from "./components/About-us/Aboutus";
 import Terms from "./components/Terms/Terms";
 import UserHome from "./components/Body/UserHome";
-import { useState, useReducer, useDeferredValue, useEffect } from "react";
+import { useEffect } from "react";
 import CreatePost from "./components/CreatePost/CreatePost";
 import Axios from "axios";
 import ViewSinglePost from "./components/ShowPost/ViewSinglePost";
@@ -16,6 +16,7 @@ import FlashMessage from "./components/FlashMessage/FlashMessage";
 import { useImmerReducer } from "use-immer";
 import { Action } from "history";
 import UserProfile from "./components/Profie/UserProfile";
+import EditPost from "./components/EditPost/EditPost";
 Axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
@@ -69,6 +70,7 @@ function App() {
               element={state.loggedIn ? <UserHome /> : <Body />}
             />
             <Route path="/post/:id" element={<ViewSinglePost />} />
+            <Route path="/post/:id/edit" element={<EditPost />} />
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/about-us" element={<Aboutus />} />
             <Route path="/terms" element={<Terms />} />
