@@ -18,6 +18,7 @@ import { useImmerReducer } from "use-immer";
 import { Action } from "history";
 import UserProfile from "./components/Profie/UserProfile";
 import EditPost from "./components/EditPost/EditPost";
+import DeletePost from "./components/DeletePost/DeletePost";
 Axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
@@ -50,9 +51,6 @@ function App() {
 
   useEffect(() => {
     if (state.loggedIn) {
-      //for debugging purpose
-      console.log(state.user.username, state.user.token);
-
       localStorage.setItem("ComplexAppToken", state.user.token);
       localStorage.setItem("ComplexAppUserName", state.user.username);
       localStorage.setItem("ComplexAppAvatar", state.user.avatar);
@@ -77,6 +75,7 @@ function App() {
             />
             <Route path="/post/:id" element={<ViewSinglePost />} />
             <Route path="/post/:id/edit" element={<EditPost />} />
+            <Route path="/post/:id/delete" element={<DeletePost />} />
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/about-us" element={<Aboutus />} />
             <Route path="/terms" element={<Terms />} />

@@ -1,16 +1,19 @@
 import Axios from "axios";
 import React, { useContext } from "react";
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
+import DispatchContext from "../Context/DispatchContext";
 import StateContext from "../Context/StateContext";
 import LoadingDotsIcon from "../Loading/LoadingDotsIcon";
 import NotFound from "../NotFound/NotFound";
+
 import Page from "../Page/Page";
 
-
 const ViewSinglePost = () => {
+  const navigate = useNavigate();
   const appState = useContext(StateContext);
+  const appDispacth = useContext(DispatchContext);
   const [isLoading, setIsLoading] = useState(true);
   const [post, setPost] = useState();
   const { id } = useParams();
@@ -51,10 +54,33 @@ const ViewSinglePost = () => {
   }/${date.getFullYear()}`;
 
   const isOwner = () => {
-    if(appState.loggedIn){
-      return appState.user.username == post.author.username
+    if (appState.loggedIn) {
+      return appState.user.username == post.author.username;
     }
-    return false
+    return false;
+  };
+  const deleteHanlder = async () => {
+    const sure = window.confirm("Do you want to delete this post!!");
+    if (sure) {
+      try {
+        const responce = await Axios.delete(`/post/${id}`, {
+          data: {
+            token: appState.user.token,
+          },
+        });
+        if (responce.data == "Success") {
+          // 1. dispaly a flash msg
+          appDispacth({
+            type: "flashMessage",
+            value: "Post was successfully deleted",
+          });
+          //2. redirect back to current user home page
+          navigate(`/profile/${appState.user.username}`);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -75,9 +101,14 @@ const ViewSinglePost = () => {
             </Link>
             <ReactTooltip id="edit" className="custom-tooltip" />
             {/* delete button */}
-            <a className="delete-post-button text-danger" title="Delete">
+            <a
+              onClick={deleteHanlder}
+              className="delete-post-button text-danger"
+              title="Delete"
+            >
               <i className="fas fa-trash"></i>
             </a>
+            <ReactTooltip id="delete" className="custom-tooltip" />
           </span>
         )}
       </div>

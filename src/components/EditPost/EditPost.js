@@ -1,7 +1,7 @@
-import Axios from "axios";
 import React, { useContext } from "react";
+import Axios from "axios";
 import { useEffect } from "react";
-import { useParams, Link,useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useImmerReducer } from "use-immer";
 import DispatchContext from "../Context/DispatchContext";
 import StateContext from "../Context/StateContext";
@@ -12,7 +12,7 @@ import Page from "../Page/Page";
 const EditPost = () => {
   const appState = useContext(StateContext);
   const appDispacth = useContext(DispatchContext);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const initailvalue = {
     title: {
@@ -80,7 +80,8 @@ const EditPost = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch({ type: "titleRules", value: state.title.value });
+    alert("post updated");
+    dispatch({ type: "titleRule", value: state.title.value });
     dispatch({ type: "bodyRule", value: state.body.value });
     dispatch({ type: "submitRequest" });
   };
@@ -101,7 +102,7 @@ const EditPost = () => {
               value: "You do not have permission to edit post",
             });
             //rediect to homapega
-            navigate("/")
+            navigate("/");
           }
         } else {
           dispatch({ type: "notFound" });
