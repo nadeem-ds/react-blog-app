@@ -1,17 +1,18 @@
 import Axios from "axios";
 import React, { useContext } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link,useNavigate } from "react-router-dom";
 import { useImmerReducer } from "use-immer";
 import DispatchContext from "../Context/DispatchContext";
 import StateContext from "../Context/StateContext";
-
 import LoadingDotsIcon from "../Loading/LoadingDotsIcon";
+import NotFound from "../NotFound/NotFound";
 import Page from "../Page/Page";
 
-const ViewSinglePost = () => {
+const EditPost = () => {
   const appState = useContext(StateContext);
   const appDispacth = useContext(DispatchContext);
+  const navigate = useNavigate()
 
   const initailvalue = {
     title: {
@@ -28,6 +29,7 @@ const ViewSinglePost = () => {
     isSaving: false,
     id: useParams().id,
     sendCount: 0,
+    notFound: false,
   };
 
   const ourReducer = (draft, action) => {
@@ -38,13 +40,17 @@ const ViewSinglePost = () => {
         draft.isFetching = false;
         return;
       case "titleChange":
+        draft.title.hasError = false;
         draft.title.value = action.value;
         return;
       case "bodyChange":
+        draft.body.hasError = false;
         draft.body.value = action.value;
         return;
       case "submitRequest":
-        draft.sendCount++;
+        if (!draft.title.hasError && !draft.body.hasError) {
+          draft.sendCount++;
+        }
         return;
       case "saveRequestStarted":
         draft.isSaving = true;
@@ -53,6 +59,20 @@ const ViewSinglePost = () => {
       case "saveRequestFinished":
         draft.isSaving = false;
         return;
+      case "titleRule":
+        if (!action.value.trim()) {
+          draft.title.hasError = true;
+          draft.title.message = "You must provide title";
+        }
+        return;
+      case "bodyRule":
+        if (!action.value.trim()) {
+          draft.body.hasError = true;
+          draft.body.message = "Body can not be emphty";
+        }
+      case "notFound":
+        draft.notFound = true;
+        return;
     }
   };
 
@@ -60,7 +80,8 @@ const ViewSinglePost = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(e);
+    dispatch({ type: "titleRules", value: state.title.value });
+    dispatch({ type: "bodyRule", value: state.body.value });
     dispatch({ type: "submitRequest" });
   };
 
@@ -72,7 +93,19 @@ const ViewSinglePost = () => {
         const responce = await Axios.get(`post/${state.id}`, {
           cancelToken: ourRequest.token,
         });
-        dispatch({ type: "fetchComplete", value: responce.data });
+        if (responce.data) {
+          dispatch({ type: "fetchComplete", value: responce.data });
+          if (appState.user.username != responce.data.author.username) {
+            appDispacth({
+              type: "flashMessage",
+              value: "You do not have permission to edit post",
+            });
+            //rediect to homapega
+            navigate("/")
+          }
+        } else {
+          dispatch({ type: "notFound" });
+        }
       } catch (error) {
         console.log("there is an big problem while loading the post");
       }
@@ -114,6 +147,10 @@ const ViewSinglePost = () => {
     }
   }, [state.sendCount]);
 
+  if (state.notFound) {
+    return <NotFound />;
+  }
+
   if (state.isFetching)
     return (
       <Page title="...">
@@ -123,7 +160,13 @@ const ViewSinglePost = () => {
 
   return (
     <Page title="edit-post">
-      <form onSubmit={submitHandler}>
+      <Link
+        className="small font-weight-bold btn btn-primary "
+        to={`/post/${state.id}`}
+      >
+        Got to the post
+      </Link>
+      <form className="mt-3" onSubmit={submitHandler}>
         <div className="form-group">
           <label htmlFor="post-title" className="text-muted mb-1">
             <small>Title</small>
@@ -140,8 +183,15 @@ const ViewSinglePost = () => {
             onChange={(e) =>
               dispatch({ type: "titleChange", value: e.target.value })
             }
+            onBlur={(e) =>
+              dispatch({ type: "titleRule", value: e.target.value })
+            }
           />
-          
+          {state.title.hasError && (
+            <div className="alert alert-danger small liveValidateMessage">
+              {state.title.message}
+            </div>
+          )}
         </div>
 
         <div className="form-group">
@@ -157,7 +207,15 @@ const ViewSinglePost = () => {
             onChange={(e) =>
               dispatch({ type: "bodyChange", value: e.target.value })
             }
+            onBlur={(e) =>
+              dispatch({ type: "bodyRule", value: e.target.value })
+            }
           />
+          {state.body.hasError && (
+            <div className="alert alert-danger small liveValidateMessage">
+              {state.body.message}
+            </div>
+          )}
         </div>
 
         <button className="btn btn-primary" disabled={state.isSaving}>
@@ -168,4 +226,4 @@ const ViewSinglePost = () => {
   );
 };
 
-export default ViewSinglePost;
+export default EditPost;

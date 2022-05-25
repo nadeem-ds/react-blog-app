@@ -3,6 +3,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import LoadingDotsIcon from "../Loading/LoadingDotsIcon";
+import NotFound from "../NotFound/NotFound";
 import Page from "../Page/Page";
 
 const ViewSinglePost = () => {
@@ -30,6 +31,10 @@ const ViewSinglePost = () => {
     };
   }, []);
 
+  if (!isLoading && !post) {
+    return <NotFound />;
+  }
+  
   if (isLoading)
     return (
       <Page title="...">
