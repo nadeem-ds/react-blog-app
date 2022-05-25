@@ -32,10 +32,10 @@ function App() {
 
   function ourReducer(draft, action) {
     switch (action.type) {
-      case "login":
+      case "Login":
         draft.loggedIn = true;
         return;
-      case "logout":
+      case "Logout":
         draft.loggedIn = false;
         return;
       case "flashMessage":
@@ -45,6 +45,7 @@ function App() {
   }
 
   const [state, dispatch] = useImmerReducer(ourReducer, initialState);
+  
   useEffect(() => {
     if (state.loggedIn) {
       localStorage.setItem("ComplexAppToken", state.user.token);

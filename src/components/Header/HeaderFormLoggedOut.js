@@ -1,13 +1,11 @@
 import React, { useState, useContext } from "react";
 import Axios from "axios";
-import ExampleContext from "../Context/ExampleContext";
 import DispatchContext from "../Context/DispatchContext";
-
 
 const HeaderFormLoggedOut = () => {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
-  const appDispacth  = useContext(DispatchContext);
+  const appDispacth = useContext(DispatchContext);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -17,8 +15,7 @@ const HeaderFormLoggedOut = () => {
         password,
       });
       if (response.data) {
-       
-        appDispacth({type:"Login", data:response.data})
+        appDispacth({ type: "Login", data: response.data });
       } else {
         console.log("Incorrect username / password.");
       }

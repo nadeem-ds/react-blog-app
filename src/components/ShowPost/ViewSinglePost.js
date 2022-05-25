@@ -1,12 +1,16 @@
 import Axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import ReactTooltip from "react-tooltip";
+import StateContext from "../Context/StateContext";
 import LoadingDotsIcon from "../Loading/LoadingDotsIcon";
 import NotFound from "../NotFound/NotFound";
 import Page from "../Page/Page";
 
+
 const ViewSinglePost = () => {
+  const appState = useContext(StateContext);
   const [isLoading, setIsLoading] = useState(true);
   const [post, setPost] = useState();
   const { id } = useParams();
@@ -34,7 +38,7 @@ const ViewSinglePost = () => {
   if (!isLoading && !post) {
     return <NotFound />;
   }
-  
+
   if (isLoading)
     return (
       <Page title="...">
@@ -46,22 +50,36 @@ const ViewSinglePost = () => {
     date.getMonth() + 1
   }/${date.getFullYear()}`;
 
+  const isOwner = () => {
+    if(appState.loggedIn){
+      return appState.user.username == post.author.username
+    }
+    return false
+  };
+
   return (
     <Page title={post.title}>
       <div className="d-flex justify-content-between">
         <h2>{post.title}</h2>
-        <span className="pt-2">
-          <Link
-            to={`/post/${post._id}/edit`}
-            className="text-primary mr-2"
-            title="Edit"
-          >
-            <i className="fas fa-edit"></i>
-          </Link>
-          <a className="delete-post-button text-danger" title="Delete">
-            <i className="fas fa-trash"></i>
-          </a>
-        </span>
+        {/* condition for original author */}
+        {isOwner() && (
+          <span className="pt-2">
+            {/* edit button */}
+            <Link
+              to={`/post/${post._id}/edit`}
+              className="text-primary mr-2"
+              data-tip="edit"
+              title="Edit"
+            >
+              <i className="fas fa-edit"></i>
+            </Link>
+            <ReactTooltip id="edit" className="custom-tooltip" />
+            {/* delete button */}
+            <a className="delete-post-button text-danger" title="Delete">
+              <i className="fas fa-trash"></i>
+            </a>
+          </span>
+        )}
       </div>
       <p className="text-muted small mb-4">
         <Link to={`/profile/${post.author.username}`}>
