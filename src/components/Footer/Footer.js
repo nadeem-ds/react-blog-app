@@ -24,7 +24,7 @@ const Footer = () => {
           <a to="/" className="text-muted">
             ComplexApp
           </a>
-          . All rights reserved.
+          . All rights reserved(Nadeem).
         </p>
       </footer>
     </div>

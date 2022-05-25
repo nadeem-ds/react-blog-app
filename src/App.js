@@ -1,4 +1,5 @@
 import "./App.css";
+import React from "react";
 import StateContext from "./components/Context/StateContext";
 import DispatchContext from "./components/Context/DispatchContext";
 import Body from "./components/Body/Body";
@@ -34,6 +35,7 @@ function App() {
     switch (action.type) {
       case "Login":
         draft.loggedIn = true;
+        draft.user = action.data;
         return;
       case "Logout":
         draft.loggedIn = false;
@@ -45,9 +47,12 @@ function App() {
   }
 
   const [state, dispatch] = useImmerReducer(ourReducer, initialState);
-  
+
   useEffect(() => {
     if (state.loggedIn) {
+      //for debugging purpose
+      console.log(state.user.username, state.user.token);
+
       localStorage.setItem("ComplexAppToken", state.user.token);
       localStorage.setItem("ComplexAppUserName", state.user.username);
       localStorage.setItem("ComplexAppAvatar", state.user.avatar);
