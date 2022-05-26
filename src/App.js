@@ -15,9 +15,9 @@ import Axios from "axios";
 import ViewSinglePost from "./components/ShowPost/ViewSinglePost";
 import FlashMessage from "./components/FlashMessage/FlashMessage";
 import { useImmerReducer } from "use-immer";
-import { Action } from "history";
 import UserProfile from "./components/Profie/UserProfile";
 import EditPost from "./components/EditPost/EditPost";
+import SearchOverlay from "./components/SearchOverlay/SearchOverlay";
 Axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
@@ -29,6 +29,7 @@ function App() {
       username: localStorage.getItem("ComplexAppUserName"),
       avatar: localStorage.getItem("ComplexAppAvatar"),
     },
+    isSearchOpen: false,
   };
 
   function ourReducer(draft, action) {
@@ -42,6 +43,12 @@ function App() {
         return;
       case "flashMessage":
         draft.flashMessages.push(action.value);
+        return;
+      case "openSearch":
+        draft.isSearchOpen = true;
+        return;
+      case "closeSearch":
+        draft.isSearchOpen = false;
         return;
     }
   }
@@ -74,11 +81,12 @@ function App() {
             />
             <Route path="/post/:id" element={<ViewSinglePost />} />
             <Route path="/post/:id/edit" element={<EditPost />} />
-           
+
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/about-us" element={<Aboutus />} />
             <Route path="/terms" element={<Terms />} />
           </Routes>
+          {state.isSearchOpen ? <SearchOverlay /> : ""}
           <Footer />
         </div>
       </DispatchContext.Provider>
