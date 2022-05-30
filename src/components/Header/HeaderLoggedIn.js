@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import ReactTooltip from "react-tooltip";
 import DispatchContext from "../Context/DispatchContext";
 import StateContext from "../Context/StateContext";
 
@@ -9,15 +10,22 @@ const HeaderLoggedIn = () => {
   const loggedOut = () => {
     appDispatch({ type: "Logout" });
   };
-const handleSearchIcon = (e) =>{
-  e.preventDefault()
-  appDispatch({type:"openSearch"})
-}
+  const handleSearchIcon = (e) => {
+    e.preventDefault();
+    appDispatch({ type: "openSearch" });
+  };
   return (
     <div className="flex-row my-3 my-md-0">
-      <a onClick={handleSearchIcon} href="#" className="text-white mr-2 header-search-icon">
+      <a
+        data-for="search"
+        data-tip="Search"
+        onClick={handleSearchIcon}
+        href="#"
+        className="text-white mr-2 header-search-icon"
+      >
         <i className="fas fa-search"></i>
       </a>
+      <ReactTooltip place="bottom" id="search" className="custom-tooltip" />
       <span className="mr-2 header-chat-icon text-white">
         <i className="fas fa-comment"></i>
         <span className="chat-count-badge text-white"> </span>

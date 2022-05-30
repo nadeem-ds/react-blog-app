@@ -18,6 +18,7 @@ import { useImmerReducer } from "use-immer";
 import UserProfile from "./components/Profie/UserProfile";
 import EditPost from "./components/EditPost/EditPost";
 import SearchOverlay from "./components/SearchOverlay/SearchOverlay";
+import { CSSTransition } from "react-transition-group";
 Axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
@@ -86,7 +87,15 @@ function App() {
             <Route path="/about-us" element={<Aboutus />} />
             <Route path="/terms" element={<Terms />} />
           </Routes>
-          {state.isSearchOpen ? <SearchOverlay /> : ""}
+
+          <CSSTransition
+            timeout={330}
+            in={state.isSearchOpen}
+            classNames="search-overlay"
+            unmountOnExit
+          >
+            <SearchOverlay />
+          </CSSTransition>
           <Footer />
         </div>
       </DispatchContext.Provider>
